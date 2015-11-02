@@ -1,0 +1,84 @@
+import java.util.Queue;
+import java.util.LinkedList;
+
+private class ParkingLot{
+	//Fields
+	private ParkingLot lotInstance = null;
+	private int num_slots;
+	Queue<Slot> slots = null;
+	Map<Slot, Vehicle> slot_vehicle_map = null;
+
+
+	//Methods
+	ParkingLot(){
+		slots = new LinkedList<Slot>();
+		slot_vehicle_map = new HashMap<Slot, Vehicle>();
+	}
+
+	getInstance(){
+		if(lotInstance == null)
+			lotInstance = new ParkingLot();
+		return lotInstance;
+	}
+
+	set numSlots(long num){
+		this.num_slots = num;
+	}
+
+	//Get a free parking slot
+	public Slot getFreeSlot(){
+		Slot slot = slots.remove();
+		if(slot == null)
+			log.error("No parking space available.");
+		else
+			return slot;
+	}
+
+	//Free a parking slot
+	public void freeSlot(Slot slot){
+		slot_vehicle_map.remove(slot);
+		slot.setStart=0;
+		slot.setEnd=0;		freeSlot()
+		slot.vehicle_id=-1;
+		slots.addLast(slot);
+	}
+
+	//Assign a slot to a vehicle
+	public boolean assign(Slot slot, Vehicle v){
+		slot_vehicle_map.put(slot, vehicle);
+		slot.setStart(getCurrentTimeMillis());
+		slot.setVehicleId(v.id);
+	}
+
+	public float amount(Slot slot){
+		float amount=0;
+		float rate =getRate(); // Get rate as per vehicle type and/or parking time
+		return rate*(slot.getEnd()-slot.getStart());
+	}
+
+}
+
+class Slot{
+	int slot_id;
+	int vehicle_id;
+	long startTime;
+	long endTime;
+
+	setStart(long time){
+		this.startTime=time;
+	}
+
+	setEnd(long time){
+		this.endTime=time;
+	}
+
+	setVehicleId(int id){
+		this.vehicle_id = id;
+	}
+}
+
+class Vehicle{
+	int vid;
+	String reg_name;
+
+}
