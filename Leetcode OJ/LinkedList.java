@@ -6,30 +6,38 @@ class LinkedListNode{
 	}
 }
 class LinkedList{
-	public static void main(String[] args) {
-		
-		LinkedListNode head = new LinkedListNode(1);
-		LinkedListNode t1 = new LinkedListNode(2);
-		LinkedListNode t2 = new LinkedListNode(4);
-		head.next=t1;
-		t1.next=t2;
-		getCount(head);
-		print(head);
-	}	
+	
+	LinkedListNode head = null;
 
-	public static void print(LinkedListNode head){
+	public void print(LinkedListNode head){
 		while(head!=null){
 			System.out.print(head.val+" ");
 			head = head.next;
 		}
 		System.out.println();
 	}
-	public static int getCount(LinkedListNode head){
+	public int getCount(LinkedListNode head){
 		int count=0;
 		while(head!=null){
 			count++;
 			head = head.next;
 		}
 		return count;
+	}
+
+
+	public void createListFromArray(int x[]){
+		LinkedListNode prev = null;
+		for(int i=0;i<x.length;i++){
+			if(i==0){
+				head= new LinkedListNode(x[i]);
+				prev = head;
+			}
+			else{
+				LinkedListNode curr = new LinkedListNode(x[i]);
+				prev.next = curr;
+				prev=curr;
+			}
+		}
 	}
 }
