@@ -1,69 +1,113 @@
+import java.util.TreeMap;
+import java.util.Map;
 
 class MergeSortedLists{
 	public static void main(String args[]){
-		int arr1[] = {1,5,7,8};
-		int arr2[] = {2,3,10,15};
+		int arr1[] = {4,5};
+		int arr2[] = {2,3};
+
 		LinkedList ll1 = new LinkedList();
 		LinkedList ll2 = new LinkedList();
 		ll1.createListFromArray(arr1);
 		ll2.createListFromArray(arr2);
-		printFromNode(mergeHelper(ll1.head, ll2.head));
+		//printFromNode(ll1.head);
+		LinkedListNode[] list = new LinkedListNode[2];
+		list[0] = ll1.head;
+		list[1] = ll2.head;
+		printFromNode(mergeKListsAliter(list));
 	}
 
+	public static LinkedListNode mergeKLists(LinkedListNode[] lists) {
+        LinkedListNode newhead = null;
+        LinkedListNode prev = null;
+        LinkedListNode min = getMin(lists);
+        int count=0;
+        while(min != null){
+        	count++;
+            if(newhead == null){
+                newhead = min;
+                prev = min;
+            }
+            else{
+                prev.next = min;
+                prev = min;
+            }
+            min = getMin(lists);
+        }
+        return newhead;
+    }
 
-	public static LinkedListNode merge(LinkedListNode[] arr){
-		LinkedListNode prev = arr[0];
-		for(int i=1;i<arr.length;i++){
-			prev = mergeHelper(prev, arr[i]);
-		}
-		return prev;
-	}
+	public static LinkedListNode getMin(LinkedListNode[] lists){
+        LinkedListNode minNode = null;
+        int index = -1;
+        for(int i=0;i<lists.length;i++){
+            LinkedListNode node = lists[i];
+            if(minNode == null && node != null){
+                minNode = node;
+                index=i;
+            }
+            else{
+                if(node!=null)
+                    if(minNode.val > node.val){
+                    	index = i;
+                        minNode = node;
+                    }
+            }
+        }
+        if(minNode!=null){
+        	//System.out.println("Min val: "+minNode.val);
+        	lists[index] = minNode.next;
+        }
+        return minNode;
+    }    
 
-	public static LinkedListNode mergeHelper(LinkedListNode l1, LinkedListNode l2){
-		if(l2==null || l1==null)
-			return l2==null ? l1 : l2;
-		LinkedListNode head=null;
-		LinkedListNode prev = null;
-		while(l1!=null && l2!=null){
-			LinkedListNode newnode = null;
-			if(l1.val < l2.val){
-				newnode = new LinkedListNode(l1.val);
-				l1 = l1.next;
+    public static void printFromNode(LinkedListNode node){
+    	while(node!=null){	
+    		System.out.print(node.val+" ");
+    		node = node.next;
+    	}
+    	System.out.println();
+    }
+
+
+    public static LinkedListNode mergeKListsAliter(LinkedListNode[] lists){
+    	TreeMap<Integer, Integer> vals = new TreeMap<Integer, Integer>();
+    	for(LinkedListNode headnode  : lists){
+    		addToMap(vals, headnode);
+    	}
+
+    	LinkedListNode newhead = null;
+    	LinkedListNode prev = null;
+
+    	for(Map.Entry<Integer,Integer> entry : vals.entrySet()) {
+			int key = entry.getKey();
+			int value = entry.getValue();
+			for(int i=0;i<value;i++){
+				if(newhead == null){
+					newhead = new LinkedListNode(key);
+					prev  = newhead;
+				}
+				else{
+					LinkedListNode node = new LinkedListNode(key);
+					prev.next = node;
+					prev = node;
+				}
 			}
-			else{
-				newnode = new LinkedListNode(l2.val);
-				l2 = l2.next;
-			}
-			if(prev!=null){
-				prev.next=newnode;
-			}
-			if(prev==null)
-				head = newnode;
-			prev = newnode;						
 		}
+		return newhead;	
 
-		while(l1!=null){
-			LinkedListNode newnode = new LinkedListNode(l1.val);
-			l1 = l1.next;
-			prev.next = newnode;
-			prev= newnode;
-		}
+    }
 
-		while(l2!=null){
-			LinkedListNode newnode = new LinkedListNode(l2.val);
-			l2 = l2.next;
-			prev.next = newnode;
-			prev= newnode;
-		}
+    public static void addToMap(TreeMap<Integer, Integer> vals, LinkedListNode head){
+    	while(head != null){
+    		int key = head.val;
+    		int count=0;
+    		if(vals.get(key)!=null){
+    			count = (Integer)vals.get(key);
+    		}
+    		vals.put(key, count+1);
+    		head = head.next;
+    	}
+    }
 
-		return head;
-	}
-
-	public static void printFromNode(LinkedListNode node){
-		while(node!=null){
-			System.out.print(node.val+" ");
-			node = node.next;
-		}
-		System.out.println();
-	}
 }
